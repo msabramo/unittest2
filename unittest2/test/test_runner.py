@@ -1,7 +1,7 @@
 import pickle
 
-from cStringIO import StringIO
 from unittest2.test.support import LoggingResult, OldTestResult
+from unittest2.compatibility import StringIO
 
 import unittest2
 
@@ -220,7 +220,10 @@ class Test_TextTestRunner(unittest2.TestCase):
     def test_pickle_unpickle(self):
         # Issue #7197: a TextTestRunner should be (un)pickleable. This is
         # required by test_multiprocessing under Windows (in verbose mode).
-        import StringIO
+        try:
+            import StringIO
+        except ImportError:
+            return
         # cStringIO objects are not pickleable, but StringIO objects are.
         stream = StringIO.StringIO("foo")
         runner = unittest2.TextTestRunner(stream)

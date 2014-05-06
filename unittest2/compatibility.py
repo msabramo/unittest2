@@ -10,6 +10,13 @@ except ImportError:
             return func
         return _wraps
 
+try:
+    # Python 2
+    from StringIO import StringIO
+except ImportError:
+    # Python 3
+    from io import StringIO
+
 __unittest = True
 
 def _relpath_nt(path, start=os.path.curdir):

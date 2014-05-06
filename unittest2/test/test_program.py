@@ -1,7 +1,6 @@
-from cStringIO import StringIO
-
 import sys
 import unittest2
+from unittest2.compatibility import StringIO
 
 hasInstallHandler = hasattr(unittest2, 'installHandler')
 

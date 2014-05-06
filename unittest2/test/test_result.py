@@ -1,8 +1,8 @@
 import sys
 import textwrap
-from StringIO import StringIO
 
 import unittest2
+from unittest2.compatibility import StringIO
 
 
 class Test_TestResult(unittest2.TestCase):
