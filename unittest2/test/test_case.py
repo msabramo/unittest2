@@ -760,7 +760,10 @@ test case
 +     own implementation that does not subclass from TestCase, of course.
 """
         self.maxDiff = None
-        for type_changer in (lambda x: x, lambda x: x.decode('utf8')):
+        type_changers = [lambda x: x]
+        if sys.version_info < (3, ):  # PY3
+            type_changers.append(lambda x: x.decode('utf-8'))
+        for type_changer in type_changers:
             try:
                 self.assertMultiLineEqual(type_changer(sample_text),
                                           type_changer(revised_sample_text))
