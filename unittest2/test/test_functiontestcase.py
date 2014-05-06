@@ -124,7 +124,7 @@ class Test_FunctionTestCase(unittest2.TestCase):
     def test_id(self):
         test = unittest2.FunctionTestCase(lambda: None)
 
-        self.assertIsInstance(test.id(), basestring)
+        self.assertTrue(hasattr(test.id(), 'startswith'))
 
     # "Returns a one-line description of the test, or None if no description
     # has been provided. The default implementation of this method returns

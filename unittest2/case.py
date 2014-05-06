@@ -116,7 +116,7 @@ class _AssertRaisesBaseContext(object):
                 self.obj_name = str(callable_obj)
         else:
             self.obj_name = None
-        if isinstance(expected_regex, basestring):
+        if hasattr(expected_regex, 'startswith'):
             expected_regex = re.compile(expected_regex)
         self.expected_regex = expected_regex
 
@@ -210,7 +210,7 @@ class _TypeEqualityDict(object):
 
     def __getitem__(self, key):
         value = self._store[key]
-        if isinstance(value, basestring):
+        if hasattr(value, 'startswith'):
             return getattr(self.testcase, value)
         return value
 
@@ -1004,9 +1004,9 @@ class TestCase(unittest.TestCase):
 
     def assertMultiLineEqual(self, first, second, msg=None):
         """Assert that two multi-line strings are equal."""
-        self.assertIsInstance(first, basestring, (
+        self.assertTrue(hasattr(first, 'startswith'), (
                 'First argument is not a string'))
-        self.assertIsInstance(second, basestring, (
+        self.assertTrue(hasattr(second, 'startswith'), (
                 'Second argument is not a string'))
 
         if first != second:
@@ -1117,7 +1117,7 @@ class TestCase(unittest.TestCase):
 
     def assertRegex(self, text, expected_regex, msg=None):
         """Fail the test unless the text matches the regular expression."""
-        if isinstance(expected_regex, basestring):
+        if hasattr(expected_regex, 'startswith'):
             expected_regex = re.compile(expected_regex)
         if not expected_regex.search(text):
             msg = msg or "Regex didn't match"
@@ -1126,7 +1126,7 @@ class TestCase(unittest.TestCase):
 
     def assertNotRegex(self, text, unexpected_regex, msg=None):
         """Fail the test if the text matches the regular expression."""
-        if isinstance(unexpected_regex, basestring):
+        if hasattr(unexpected_regex, 'startswith'):
             unexpected_regex = re.compile(unexpected_regex)
         match = unexpected_regex.search(text)
         if match:

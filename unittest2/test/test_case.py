@@ -373,7 +373,7 @@ class Test_TestCase(unittest2.TestCase, EqualityMixin, HashingMixin):
             def runTest(self):
                 pass
 
-        self.assertIsInstance(Foo().id(), basestring)
+        self.assertTrue(hasattr(Foo().id(), 'startswith'))
 
     # "If result is omitted or None, a temporary result object is created
     # and used, but is not made available to the caller. As TestCase owns the
