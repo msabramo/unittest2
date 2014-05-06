@@ -18,6 +18,19 @@ except ImportError:
 
 __unittest = True
 
+try:
+    # Python 2
+    cmp = cmp
+except NameError:
+    # Python 3
+    def cmp(a, b):
+        if a < b:
+            return -1
+        elif a > b:
+            return 1
+        else:
+            return 0
+
 
 def _CmpToKey(mycmp):
     'Convert a cmp= function into a key= function'
@@ -68,7 +81,7 @@ class TestLoader(unittest.TestLoader):
     and returning them wrapped in a TestSuite
     """
     testMethodPrefix = 'test'
-    sortTestMethodsUsing = cmp
+    sortTestMethodsUsing = staticmethod(cmp)
     suiteClass = suite.TestSuite
     _top_level_dir = None
 

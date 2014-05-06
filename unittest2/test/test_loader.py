@@ -2,6 +2,7 @@ import sys
 import types
 
 import unittest2
+from unittest2.loader import cmp
 
 
 class Test_TestLoader(unittest2.TestCase):
