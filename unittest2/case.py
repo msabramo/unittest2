@@ -371,7 +371,8 @@ class TestCase(unittest.TestCase):
             function()
         except KeyboardInterrupt:
             raise
-        except SkipTest, e:
+        except SkipTest:
+            e = sys.exc_info()[1]
             outcome.success = False
             outcome.skipped = str(e)
         except _UnexpectedSuccess:
@@ -560,7 +561,7 @@ class TestCase(unittest.TestCase):
             excName = excClass.__name__
         else:
             excName = str(excClass)
-        raise self.failureException, "%s not raised" % excName
+        raise self.failureException("%s not raised" % excName)
 
     def assertWarns(self, expected_warning, callable_obj=None, *args, **kwargs):
         """Fail unless a warning of class warnClass is triggered
@@ -866,16 +867,20 @@ class TestCase(unittest.TestCase):
         """
         try:
             difference1 = set1.difference(set2)
-        except TypeError, e:
+        except TypeError:
+            e = sys.exc_info()[1]
             self.fail('invalid type when attempting set difference: %s' % e)
-        except AttributeError, e:
+        except AttributeError:
+            e = sys.exc_info()[1]
             self.fail('first argument does not support set difference: %s' % e)
 
         try:
             difference2 = set2.difference(set1)
-        except TypeError, e:
+        except TypeError:
+            e = sys.exc_info()[1]
             self.fail('invalid type when attempting set difference: %s' % e)
-        except AttributeError, e:
+        except AttributeError:
+            e = sys.exc_info()[1]
             self.fail('second argument does not support set difference: %s' % e)
 
         if not (difference1 or difference2):
@@ -1076,8 +1081,9 @@ class TestCase(unittest.TestCase):
             return _AssertRaisesContext(expected_exception, self, expected_regex)
         try:
             callable_obj(*args, **kwargs)
-        except expected_exception, exc_value:
-            if isinstance(expected_regex, basestring):
+        except expected_exception:
+            exc_value = sys.exc_info()[1]
+            if hasattr(expected_regex, 'startswith'):
                 expected_regex = re.compile(expected_regex)
             if not expected_regex.search(str(exc_value)):
                 raise self.failureException('"%s" does not match "%s"' %
@@ -1087,7 +1093,7 @@ class TestCase(unittest.TestCase):
                 excName = expected_exception.__name__
             else:
                 excName = str(expected_exception)
-            raise self.failureException, "%s not raised" % excName
+            raise self.failureException("%s not raised" % excName)
 
     def assertWarnsRegex(self, expected_warning, expected_regex,
                          callable_obj=None, *args, **kwargs):

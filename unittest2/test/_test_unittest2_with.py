@@ -42,7 +42,8 @@ class TestWith(unittest2.TestCase):
         self.assertRaises(KeyError, _raise, KeyError("key"))
         try:
             self.assertRaises(KeyError, lambda: None)
-        except self.failureException, e:
+        except self.failureException:
+            e = sys.exc_info()[1]
             self.assertIn("KeyError not raised", e.args)
         else:
             self.fail("assertRaises() didn't fail")
@@ -55,7 +56,8 @@ class TestWith(unittest2.TestCase):
         with self.assertRaises(KeyError) as cm:
             try:
                 raise KeyError
-            except Exception, e:
+            except Exception:
+                e = sys.exc_info()[1]
                 raise
         self.assertIs(cm.exception, e)
 
@@ -64,7 +66,8 @@ class TestWith(unittest2.TestCase):
         try:
             with self.assertRaises(KeyError):
                 pass
-        except self.failureException, e:
+        except self.failureException:
+            e = sys.exc_info()[1]
             self.assertIn("KeyError not raised", e.args)
         else:
             self.fail("assertRaises() didn't fail")

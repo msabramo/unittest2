@@ -151,7 +151,8 @@ class TestProgram(object):
             else:
                 self.testNames = (self.defaultTest,)
             self.createTests()
-        except getopt.error, msg:
+        except getopt.error:
+            msg = sys.exc_info()[1]
             self.usageExit(msg)
 
     def createTests(self):
