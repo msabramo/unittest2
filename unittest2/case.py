@@ -13,7 +13,7 @@ from unittest2.util import (
     unorderable_list_difference
 )
 
-from unittest2.compatibility import wraps, with_context, catch_warnings
+from unittest2.compatibility import wraps, with_context, catch_warnings, unicode
 
 __unittest = True
 

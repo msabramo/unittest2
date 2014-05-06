@@ -12,6 +12,13 @@ except ImportError:
 
 try:
     # Python 2
+    unicode = unicode
+except NameError:
+    # Python 3
+    unicode = str
+
+try:
+    # Python 2
     from StringIO import StringIO
 except ImportError:
     # Python 3
