@@ -767,7 +767,7 @@ test case
             except self.failureException:
                 e = sys.exc_info()[1]
                 # need to remove the first line of the error message
-                error = str(e).encode('utf8').split('\n', 1)[1]
+                error = str(e).split('\n', 1)[1]
 
                 # assertMultiLineEqual is hooked up as the default for
                 # unicode strings - so we can't use it for this check
