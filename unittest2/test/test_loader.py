@@ -5,6 +5,13 @@ import unittest2
 from unittest2.loader import cmp
 
 
+def no_module_named_message(module):
+    if sys.version_info < (3, 3):
+        return "No module named %s" % module
+    else:
+        return "No module named '%s'" % module
+
+
 class Test_TestLoader(unittest2.TestCase):
 
     ### Tests for TestLoader.loadTestsFromTestCase
@@ -239,10 +246,11 @@ class Test_TestLoader(unittest2.TestCase):
         loader = unittest2.TestLoader()
 
         try:
-            loader.loadTestsFromName('sdasfasfasdf')
+            module_name = 'sdasfasfasdf'
+            loader.loadTestsFromName(module_name)
         except ImportError:
             e = sys.exc_info()[1]
-            self.assertEqual(str(e), "No module named sdasfasfasdf")
+            self.assertEqual(str(e), no_module_named_message(module_name))
         else:
             self.fail("TestLoader.loadTestsFromName failed to raise ImportError")
 
@@ -624,10 +632,11 @@ class Test_TestLoader(unittest2.TestCase):
         loader = unittest2.TestLoader()
 
         try:
-            loader.loadTestsFromNames(['sdasfasfasdf'])
+            module_name = 'sdasfasfasdf'
+            loader.loadTestsFromNames([module_name])
         except ImportError:
             e = sys.exc_info()[1]
-            self.assertEqual(str(e), "No module named sdasfasfasdf")
+            self.assertEqual(str(e), no_module_named_message(module_name))
         else:
             self.fail("TestLoader.loadTestsFromNames failed to raise ImportError")
 
