@@ -31,6 +31,16 @@ except NameError:
         else:
             return 0
 
+try:
+    # Python 2
+    types.UnboundMethodType
+    def is_unbound_method(f):
+        return isinstance(f, types.UnboundMethodType)
+except AttributeError:
+    # Python3
+    def is_unbound_method(f):
+        return isinstance(f, types.FunctionType)
+
 
 def _CmpToKey(mycmp):
     'Convert a cmp= function into a key= function'
@@ -144,7 +154,7 @@ class TestLoader(unittest.TestLoader):
             return self.loadTestsFromModule(obj)
         elif isinstance(obj, type) and issubclass(obj, unittest.TestCase):
             return self.loadTestsFromTestCase(obj)
-        elif (isinstance(obj, types.UnboundMethodType) and
+        elif (is_unbound_method(obj) and
               isinstance(parent, type) and
               issubclass(parent, case.TestCase)):
             return self.suiteClass([parent(obj.__name__)])
