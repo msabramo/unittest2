@@ -1,5 +1,6 @@
 import sys
 import textwrap
+import traceback
 
 import unittest2
 from unittest2.compatibility import StringIO
@@ -291,6 +292,15 @@ class Test_TestResult(unittest2.TestCase):
         self.assertTrue(self.testRan)
 
 
+class MockTraceback(object):
+    @staticmethod
+    def format_exception(*_):
+        return ['A traceback']
+
+def restore_traceback():
+    unittest2.result.traceback = traceback
+
+
 class TestOutputBuffering(unittest2.TestCase):
 
     def setUp(self):
@@ -371,6 +381,9 @@ class TestOutputBuffering(unittest2.TestCase):
         return result
 
     def testBufferOutputAddErrorOrFailure(self):
+        unittest2.result.traceback = MockTraceback
+        self.addCleanup(restore_traceback)
+
         for message_attr, add_attr, include_error in [
             ('errors', 'addError', True),
             ('failures', 'addFailure', False),
@@ -378,12 +391,15 @@ class TestOutputBuffering(unittest2.TestCase):
             ('failures', 'addFailure', False)
         ]:
             result = self.getStartedResult()
+            buffered_out = sys.stdout
+            buffered_err = sys.stderr
             result._original_stderr = StringIO()
             result._original_stdout = StringIO()
 
             print('foo')
             if include_error:
                 sys.stderr.write('bar\n')
+
 
             addFunction = getattr(result, add_attr)
             addFunction(self, (None, None, None))
@@ -403,7 +419,8 @@ class TestOutputBuffering(unittest2.TestCase):
                 Stderr:
                 bar
             """)
-            expectedFullMessage = 'None\n%s%s' % (expectedOutMessage, expectedErrMessage)
+
+            expectedFullMessage = 'A traceback%s%s' % (expectedOutMessage, expectedErrMessage)
 
             self.assertIs(test, self)
             self.assertEqual(result._original_stdout.getvalue(), expectedOutMessage)
