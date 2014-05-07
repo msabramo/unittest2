@@ -4,6 +4,7 @@ from __future__ import with_statement
 import unittest2
 from unittest2.test.support import OldTestResult
 from unittest2.compatibility import catch_warnings
+from unittest2.compatibility import u
 
 import sys
 import warnings
@@ -85,14 +86,14 @@ class TestWith(unittest2.TestCase):
             one = ''.join(chr(i) for i in range(255))
             # this used to cause a UnicodeDecodeError constructing the failure msg
             with self.assertRaises(self.failureException):
-                self.assertDictContainsSubset({'foo': one}, {'foo': u'\uFFFD'})
+                self.assertDictContainsSubset({'foo': one}, {'foo': u('\uFFFD')})
 
     def test_formatMessage_unicode_error(self):
         with catch_warnings(record=True):
             # This causes a UnicodeWarning due to its craziness
             one = ''.join(chr(i) for i in range(255))
             # this used to cause a UnicodeDecodeError constructing msg
-            self._formatMessage(one, u'\uFFFD')
+            self._formatMessage(one, u('\uFFFD'))
 
     def assertOldResultWarning(self, test, failures):
         with self.assertWarns(RuntimeWarning):

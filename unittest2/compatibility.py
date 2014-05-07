@@ -13,9 +13,13 @@ except ImportError:
 try:
     # Python 2
     unicode = unicode
+    def u(s):
+        return unicode(s.replace(r'\\', r'\\\\'), "unicode_escape")
 except NameError:
     # Python 3
     unicode = str
+    def u(s):
+        return s
 
 try:
     # Python 2
